@@ -12,7 +12,7 @@ app.use(cors());
 
 const pool = new Pool({
   user: "admin",
-  host: "10.221.4.188",
+  host: "10.221.4.188", // change this depending on where your psql docker container is running
   database: "pt",
   password: "admin",
   port: "5050",
