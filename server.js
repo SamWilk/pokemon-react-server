@@ -121,6 +121,7 @@ app.get("/pokemon/gen/", async (request, response) => {
 });
 
 // Will need a check to make sure users cannot use the same name
+// Testing something out
 app.post("/users", async (request, response) => {
   let createUserFlag = true;
   const checkNamequery = {
