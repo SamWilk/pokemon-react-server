@@ -3,3 +3,7 @@ package-lock.json
 
 .env
 request.rest
+
+pokemon-psql
+
+docker-compose.yaml
