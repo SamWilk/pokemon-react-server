@@ -132,7 +132,7 @@ router.get("/pokemon/gen/", async (request, response) => {
   try {
     const client = await db.connect();
 
-    pool.query(query, (err, res) => {
+    client.query(query, (err, res) => {
       if (err) {
         console.error(err);
         console.log(`No Gen ${request.body.generation} found`);
