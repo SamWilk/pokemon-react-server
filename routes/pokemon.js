@@ -121,10 +121,6 @@ router.delete(
 );
 
 router.get("/pokemon/gen/:generation", async (request, response) => {
-  console.log("________________________________________");
-  console.log("Generation: ", request.body.generation);
-  console.log("________________________________________");
-
   const query = {
     text: ` select *
           from pokemon p
