@@ -38,6 +38,7 @@ router.get("/users/pokemon", authenticateToken, async (request, response) => {
       from pokemonflag pf
       join users u on u.id = pf.userid
       where u.id = $1
+      order by pf.pokemonid 
       `,
     values: [currentUser.userID],
   };
