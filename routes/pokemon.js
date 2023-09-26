@@ -71,7 +71,24 @@ router.post("/users/pokemon", authenticateToken, async (request, response) => {
     client.query(checkQuery, (err, res) => {
       if (err) return response.status(400).send();
       if (res.rowCount !== 0) {
-        response.status(403).send("Poke-flag already created");
+        const currentUser = request.user;
+        const query = {
+          text: `
+          delete from pokemonflag pf
+          where pf.pokemonid = $1
+          and pf.userid = $2
+          `,
+          values: [request.body.pokemonid, currentUser.userID],
+        };
+        try {
+          client.query(query, (err, res) => {
+            if (err) response.status(400).send();
+          });
+          response.status(202).send("Flag removed");
+        } catch (error) {
+          console.log(error);
+          response.status(500).send("Interal Error");
+        }
       } else {
         const query = {
           text: `

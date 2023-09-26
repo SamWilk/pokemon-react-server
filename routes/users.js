@@ -43,7 +43,7 @@ router.post("/users", async (request, response) => {
   }
 });
 
-router.get("/users/login", async (request, response) => {
+router.post("/users/login", async (request, response) => {
   try {
     const client = await db.connect();
     const query = {
@@ -65,7 +65,11 @@ router.get("/users/login", async (request, response) => {
           // User has been authenticated, create JWT token
           const user = { name: checkUser.name, userID: checkUser.id };
           const accessToken = jwt.sign(user, process.env.JWT_TOKEN_ACCESS);
-          response.status(200).json({ accessToken: accessToken });
+          response.status(200).json({
+            accessToken: accessToken,
+            name: checkUser.name,
+            userID: checkUser.id,
+          });
         } else {
           response.status(400).send("Passwords do not match");
         }
@@ -73,6 +77,7 @@ router.get("/users/login", async (request, response) => {
     });
     client.release();
   } catch (error) {
+    console.log("Something happened");
     console.log(error);
     response.status(500).send();
   }
