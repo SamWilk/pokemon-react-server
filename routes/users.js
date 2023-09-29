@@ -33,8 +33,16 @@ router.post("/users", async (request, response) => {
             values (uuid_generate_v4(), $1, $2, $3)`,
           values: [request.body.name, request.body.email, password],
         };
-        client.query(query);
-        response.status(201).send("User Created");
+        client.query(query, (err, res) => {
+          if (err) {
+            console.error(err);
+            console.log("No Pokemon Found");
+            response.status(400).send();
+          } else {
+            response.status(201).send(request.body.name);
+          }
+        });
+        //response.status(201).send("User Created");
       }
     });
     client.release();
