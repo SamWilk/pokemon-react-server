@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { v4 } = require("uuid");
 require("dotenv").config();
+const authenticateToken = require("../config/AuthenticateToken");
 
 const router = express.Router();
 
@@ -89,6 +90,15 @@ router.post("/users/login", async (request, response) => {
     console.log(error);
     response.status(500).send();
   }
+});
+
+router.get("/users/getUser", authenticateToken, async (request, response) => {
+  response.status(200).send(request.user);
+});
+
+router.patch("/users", authenticateToken, async (request, response) => {
+  const updateUser = request.user;
+  console.log(`New Updated User: ${updateUser}`);
 });
 
 module.exports = router;
