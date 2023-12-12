@@ -54,10 +54,6 @@ router.get("/users/pokemon", authenticateToken, async (request, response) => {
   }
 });
 
-router.get("/users/getUser", authenticateToken, async (request, response) => {
-  response.status(200).send(request.user);
-});
-
 router.post("/users/pokemon", authenticateToken, async (request, response) => {
   const currentUser = request.user;
   const checkQuery = {

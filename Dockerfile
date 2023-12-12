@@ -1,7 +1,7 @@
 FROM node:18-alpine
 
 # Set the working directory to /app/server
-WORKDIR /app/server
+WORKDIR /app
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
@@ -16,4 +16,4 @@ COPY . .
 EXPOSE 3000
 
 # Start the application
-CMD ["npm","start"]
+CMD ["npm", "run","start"]
