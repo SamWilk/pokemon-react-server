@@ -93,12 +93,93 @@ router.post("/users/login", async (request, response) => {
 });
 
 router.get("/users/getUser", authenticateToken, async (request, response) => {
-  response.status(200).send(request.user);
+  try {
+    const client = await db.connect();
+    const query = {
+      text: `select u.id, u.name
+          from users u
+          where u.id = $1`,
+      values: [request.user.userID],
+    };
+    client.query(query, (err, res) => {
+      if (err) {
+        console.error(err);
+        response.status(500).send("User not found");
+      }
+      if (res.rowCount == 0) {
+        response.status(404).send("No user found");
+      } else {
+        response.status(200).send(res.rows.pop());
+      }
+    });
+    client.release();
+  } catch (error) {
+    console.log("Something happened");
+    console.log(error);
+    response.status(500).send();
+  }
 });
 
-router.patch("/users", authenticateToken, async (request, response) => {
-  const updateUser = request.user;
-  console.log(`New Updated User: ${updateUser}`);
-});
+router.patch(
+  "/users/:currentName",
+  authenticateToken,
+  async (request, response) => {
+    const currentName = request.params.currentName;
+    const updateUserName = request.body.name;
+
+    try {
+      const client = await db.connect();
+      const query = {
+        text: `select u.id, u.name
+          from users u
+          where u.name = $1`,
+        values: [currentName],
+      };
+      client.query(query, async (err, res) => {
+        if (err) {
+          console.error(err);
+          response.status(500).send("User not found");
+        }
+        if (res.rowCount == 0) {
+          response.status(404).send("No user found");
+        } else {
+          // Need to check to make sure new name is not already taken
+          const checkNewNameQuery = {
+            text: `select * from users u where u.name = $1`,
+            values: [updateUserName],
+          };
+          client.query(checkNewNameQuery, async (err, res) => {
+            if (err) {
+              console.error(err);
+              response.status(500).send("Something went wrong");
+            }
+            if (res.rowCount != 0) {
+              response.status(400).send("User already exists with username");
+            } else {
+              const updateNameQuery = {
+                text: `update users
+                      set name = $1
+                      where name = $2`,
+                values: [updateUserName, currentName],
+              };
+              client.query(updateNameQuery, async (err, res) => {
+                if (err) {
+                  console.error(err);
+                  response.status(500).send("User not found");
+                }
+                response.status(200).send();
+              });
+            }
+          });
+        }
+      });
+      client.release();
+    } catch (error) {
+      console.log("Something happened");
+      console.log(error);
+      response.status(500).send();
+    }
+  }
+);
 
 module.exports = router;
