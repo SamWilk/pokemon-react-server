@@ -11,7 +11,6 @@ const router = express.Router();
 // Will need a check to make sure users cannot use the same name
 // Testing something out
 router.post("/users", async (request, response) => {
-  let createUserFlag = true;
   const checkNamequery = {
     text: `select * from users where name = $1 or email = $2`,
     values: [request.body.name, request.body.email],
@@ -20,7 +19,6 @@ router.post("/users", async (request, response) => {
     const client = await db.connect();
     client.query(checkNamequery, async (err, res) => {
       if (res.rowCount >= 1) {
-        createUserFlag = false;
         response.status(400).send("User already exists with username or email");
       } else {
         let password;
@@ -43,7 +41,6 @@ router.post("/users", async (request, response) => {
             response.status(201).send(request.body.name);
           }
         });
-        //response.status(201).send("User Created");
       }
     });
     client.release();
