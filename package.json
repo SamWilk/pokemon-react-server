@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
-    "start": "npm i && node server.js"
+    "pre-prod": "npm install --production",
+    "start": "node server.js"
   },
   "author": "Sam Wilk",
   "license": "ISC",

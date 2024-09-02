@@ -20,18 +20,7 @@ app.use(pokemon);
 app.use(users);
 
 app.listen(3000, "0.0.0.0", () => {
-  for (const name of Object.keys(nets)) {
-    for (const net of nets[name]) {
-      const familyV4Value = typeof net.family === "string" ? "IPv4" : 4;
-      if (net.family === familyV4Value && !net.internal) {
-        if (!results[name]) {
-          results[name] = [];
-        }
-        results.push(net.address);
-      }
-    }
-  }
-  console.log(`About-me-server running on port http://${results.pop()}:3000`);
+  console.log(`About-me-server running on port http://localhost:3000`);
 });
 
 module.exports = app;
